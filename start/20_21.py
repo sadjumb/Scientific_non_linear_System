@@ -22,6 +22,7 @@ def plot_simulation(model, x0, y0):
     y_test = y0 * np.exp(t_test)
 
     sim = model.simulate([x0, y0], t=t_test)
+    #Что за метод?
 
     plt.figure(figsize=(6, 4))
     plt.plot(x_test, y_test, label="Ground truth", linewidth=4)
