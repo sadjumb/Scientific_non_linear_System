@@ -7,9 +7,10 @@ y = 0.5 * np.exp(t)
 X = np.stack((x, y), axis=-1) #?странный метод
 
 model = ps.SINDy(
-    differentiation_method=ps.FiniteDifference(order=2), #?
+    #Понять, что за класс
+    differentiation_method=ps.FiniteDifference(order=2), #что за метод
     feature_library=ps.FourierLibrary(),
-    optimizer=ps.STLSQ(threshold=0.2), #?
+    optimizer=ps.STLSQ(threshold=0.2), #что за метод
     feature_names=["x", "y"]
 )
 model.fit(X, t=t) #обучение сети, не нашёл нормального описания
