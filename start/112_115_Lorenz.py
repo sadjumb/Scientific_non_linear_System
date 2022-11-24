@@ -16,7 +16,7 @@ def f(state, t):
 state0 = [1.0, 1.0, 1.0]
 time_steps = np.arange(0.0, 40.0, dt)
 
-x_train = odeint(f, state0, time_steps)
+x_train = odeint(f, state0, time_steps) #?
 
 model = ps.SINDy(
     optimizer=ps.STLSQ(threshold=0.05),
