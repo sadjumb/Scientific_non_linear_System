@@ -19,6 +19,7 @@ time_steps = np.arange(0.0, 40.0, dt)
 
 x_train = odeint(f, state0, time_steps)
 
+# что тут началось?
 radius = 0.6
 sparsity = 0.01
 input_dim = 3
@@ -27,6 +28,7 @@ n_steps_prerun = 10
 regularization = 1e-2
 sequence = x_train
 
+# а здесь что происходит?
 weights_hidden = sparse.random(reservoir_size, reservoir_size, density=sparsity)
 eigenvalues, _ = sparse.linalg.eigs(weights_hidden)
 weights_hidden = weights_hidden / np.max(np.abs(eigenvalues)) * radius
