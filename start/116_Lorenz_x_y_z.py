@@ -39,6 +39,6 @@ def plot_dimension(dim, name):
     plt.draw()
     plt.show()
 
-plot_dimension(0, 'x')
+plot_dimension(0, 'x') #?
 plot_dimension(1, 'y')
 plot_dimension(2, 'z')
