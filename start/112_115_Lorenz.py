@@ -17,6 +17,9 @@ state0 = [1.0, 1.0, 1.0]
 time_steps = np.arange(0.0, 40.0, dt)
 
 x_train = odeint(f, state0, time_steps) #?
+# Что возвращает? 
+# (t = 0 в общее решение) --> y0
+# Возвращает массив значений частного решения системы ДУ
 
 model = ps.SINDy(
     optimizer=ps.STLSQ(threshold=0.05),
