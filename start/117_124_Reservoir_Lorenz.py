@@ -29,22 +29,22 @@ regularization = 1e-2
 sequence = x_train
 
 # а здесь что происходит?
-weights_hidden = sparse.random(reservoir_size, reservoir_size, density=sparsity)
-eigenvalues, _ = sparse.linalg.eigs(weights_hidden)
-weights_hidden = weights_hidden / np.max(np.abs(eigenvalues)) * radius
+weights_hidden = sparse.random(reservoir_size, reservoir_size, density=sparsity) #?
+eigenvalues, _ = sparse.linalg.eigs(weights_hidden) #?
+weights_hidden = weights_hidden / np.max(np.abs(eigenvalues)) * radius #?
 
-weights_input = np.zeros((reservoir_size, input_dim))
+weights_input = np.zeros((reservoir_size, input_dim)) #?
 q = int(reservoir_size / input_dim)
 for i in range(0, input_dim):
-    weights_input[i * q:(i + 1) * q, i] = 2 * np.random.rand(q) - 1
+    weights_input[i * q:(i + 1) * q, i] = 2 * np.random.rand(q) - 1 #?
 
 weights_output = np.zeros((input_dim, reservoir_size))
 
 def initialize_hidden(reservoir_size, n_steps_prerun, sequence):
     hidden = np.zeros((reservoir_size, 1))
     for t in range(n_steps_prerun):
-        input = sequence[t].reshape(-1, 1)
-        hidden = np.tanh(weights_hidden @ hidden + weights_input @ input)
+        input = sequence[t].reshape(-1, 1) #?
+        hidden = np.tanh(weights_hidden @ hidden + weights_input @ input) #?
     return hidden
 
 def augment_hidden(hidden):
@@ -56,6 +56,7 @@ hidden = initialize_hidden(reservoir_size, n_steps_prerun, sequence)
 hidden_states = []
 targets = []
 
+# что это?
 for t in range(n_steps_prerun, len(sequence) - 1):
     input = np.reshape(sequence[t], (-1, 1))
     target = np.reshape(sequence[t + 1], (-1, 1))
@@ -65,8 +66,9 @@ for t in range(n_steps_prerun, len(sequence) - 1):
     targets.append(target)
 
 targets = np.squeeze(np.array(targets))
-hidden_states = np.squeeze(np.array(hidden_states))
+hidden_states = np.squeeze(np.array(hidden_states)) #?
 
+#?
 weights_output = (np.linalg.inv(hidden_states.T@hidden_states + regularization * np.eye(reservoir_size)) @ hidden_states.T@targets).T
 
 def predict(sequence, n_steps_predict):
@@ -83,6 +85,8 @@ def predict(sequence, n_steps_predict):
     return np.array(outputs)
 
 x_sim = predict(sequence, 4000)
+
+# дальше графики
 
 plt.figure(figsize=(6, 4))
 plt.plot(x_train[:4000, 0], x_train[:4000, 2], label="Ground truth")
