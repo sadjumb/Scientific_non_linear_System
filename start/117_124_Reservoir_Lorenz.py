@@ -99,7 +99,7 @@ def predict(sequence, n_steps_predict):
         outputs.append(output)
     return np.array(outputs)
 
-x_sim = predict(sequence, 4000)
+x_sim = predict(sequence, 4000) # Тренировка здесь
 
 # дальше графики
 
