@@ -20,37 +20,51 @@ time_steps = np.arange(0.0, 40.0, dt)
 x_train = odeint(f, state0, time_steps)
 
 # что тут началось?
-radius = 0.6
-sparsity = 0.01
-input_dim = 3
-reservoir_size = 1000
-n_steps_prerun = 10
-regularization = 1e-2
-sequence = x_train
+#1. какие-то параметры 
+radius = 0.6                    #радиус
+sparsity = 0.01                 #разреженность
+input_dim = 3                   #размерность 
+reservoir_size = 1000           #размер резервуара
+n_steps_prerun = 10             #n, шаг, предварительный запуск 
+regularization = 1e-2           #регуляризация
+sequence = x_train              #последовательность 
 
+# 2.
 # а здесь что происходит?
+# Разбираем:
+# СЛУЧАЙНОЕ ЗАДАНИЕ МАТРИЦЫ СКРЫТЫХ ВЕСОВ
 weights_hidden = sparse.random(reservoir_size, reservoir_size, density=sparsity) #?
-eigenvalues, _ = sparse.linalg.eigs(weights_hidden) #?
-weights_hidden = weights_hidden / np.max(np.abs(eigenvalues)) * radius #?
+#Создаёт разреженную матрицу заданной формы и плотности со случайно распределенными значениями.
+#(m , n , плотность = 0,01)
 
-weights_input = np.zeros((reservoir_size, input_dim)) #?
+eigenvalues, _ = sparse.linalg.eigs(weights_hidden) #?
+#Найдёт k собственных значений и собственных векторов квадратной матрицы A.
+
+weights_hidden = weights_hidden / np.max(np.abs(eigenvalues)) * radius #интересно 
+
+weights_input = np.zeros((reservoir_size, input_dim)) 
+#Сделает нулевой input_dim-мерный массив на reservoir_size значений 
 q = int(reservoir_size / input_dim)
 for i in range(0, input_dim):
-    weights_input[i * q:(i + 1) * q, i] = 2 * np.random.rand(q) - 1 #?
+    weights_input[i * q:(i + 1) * q, i] = 2 * np.random.rand(q) - 1 
+    #Что это за ':'? Что тут происходит? 
 
 weights_output = np.zeros((input_dim, reservoir_size))
 
 def initialize_hidden(reservoir_size, n_steps_prerun, sequence):
     hidden = np.zeros((reservoir_size, 1))
     for t in range(n_steps_prerun):
-        input = sequence[t].reshape(-1, 1) #?
-        hidden = np.tanh(weights_hidden @ hidden + weights_input @ input) #?
+        input = sequence[t].reshape(-1, 1) # Не понимаю, что здесь.
+        hidden = np.tanh(weights_hidden @ hidden + weights_input @ input) 
+        #hyperbolic tangent
+        # Что за собаки?
     return hidden
 
 def augment_hidden(hidden):
     h_aug = hidden.copy()
     h_aug[::2] = pow(h_aug[::2], 2.0)
     return h_aug
+# тут тоже что-то
 
 hidden = initialize_hidden(reservoir_size, n_steps_prerun, sequence)
 hidden_states = []
@@ -65,11 +79,12 @@ for t in range(n_steps_prerun, len(sequence) - 1):
     hidden_states.append(hidden)
     targets.append(target)
 
-targets = np.squeeze(np.array(targets))
-hidden_states = np.squeeze(np.array(hidden_states)) #?
+targets = np.squeeze(np.array(targets)) #?
+hidden_states = np.squeeze(np.array(hidden_states)) 
 
 #?
 weights_output = (np.linalg.inv(hidden_states.T@hidden_states + regularization * np.eye(reservoir_size)) @ hidden_states.T@targets).T
+# np.linalg.inv возвращает обратную матрицу, np.eye единичная матрица
 
 def predict(sequence, n_steps_predict):
     hidden = initialize_hidden(reservoir_size, n_steps_prerun, sequence)
@@ -110,7 +125,7 @@ plot_dimension(0, 'x')
 plot_dimension(1, 'y')
 plot_dimension(2, 'z')
 
-
+# Короче, странная конструкция, надо ещё разбираться.
 
 
 
